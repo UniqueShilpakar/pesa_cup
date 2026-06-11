@@ -47,7 +47,7 @@ export default function  Footer() {
                 </li>
                 <li>
                   <Mail size={18} />
-                  <span>uniqueshilpakr17@gmail.com</span>
+                  <span>uniqueshilpakar17@gmail.com</span>
                 </li>
               </ul>
             </div>

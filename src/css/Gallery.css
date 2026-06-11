@@ -37,3 +37,121 @@
   cursor: pointer;
 }
 
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: tranform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-img{
+    transform: scale(1.05);
+}
+
+.gallery-caption{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+    padding: 0.5rem 0.8rem;
+  background: linear-gradient(transparent, rgba(6, 14, 30, 0.85));
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+
+.gallery-item:hover .gallery-caption {
+  opacity: 1;
+}
+
+/* lightBox */
+.lightbox{
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 14, 30, 0.92);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox-close {
+      position: absolute;
+  top: -36px;
+  right: 0;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.lightbox-close:hover {
+  opacity: 1;
+}
+
+.lightbox-img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+.lightbox-caption {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.82rem;
+  color: #8facc8;
+  text-align: center;
+  margin: 0.6rem 0 0;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gallery-filters {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.8rem;
+  flex-wrap: wrap;
+}
+
+.gallery-filter-btn {
+  font-family: 'Barlow', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 1.1rem;
+  border-radius: 3px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gallery-filter-btn:hover {
+  border-color: #f5c842;
+  color: #f5c842;
+}
+
+.gallery-filter-btn.active {
+  background: #f5c842;
+  border-color: #f5c842;
+  color: #0a1628;
+}
