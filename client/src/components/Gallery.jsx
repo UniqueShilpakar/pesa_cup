@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "../css/GalleryPage.css";
+import "../css/Gallery.css";
 
-import photo1 from "../assets/Gallary/1.jpg";
-import photo2 from "../assets/Gallary/2.jpg";
-import photo3 from "../assets/Gallary/3.jpg";
-import photo4 from "../assets/Gallary/4.jpg";
-import photo5 from "../assets/Gallary/5.jpg";
-import photo6 from "../assets/Gallary/6.jpg";
-import photoBack from "../assets/Gallary/back.jpg";
-import photoTeam from "../assets/Gallary/team.jpg";
+import photo1 from "../assets/Gallery/1.jpg";
+import photo2 from "../assets/Gallery/2.jpg";
+import photo3 from "../assets/Gallery/3.jpg";
+import photo4 from "../assets/Gallery/4.jpg";
+import photo5 from "../assets/Gallery/5.jpg";
+import photo6 from "../assets/Gallery/6.jpg";
+import photoBack from "../assets/Gallery/back.jpg";
+import photoTeam from "../assets/Gallery/team.jpg";
 
 const categories = {
   match: {
@@ -50,7 +50,7 @@ export default function GalleryPage(){
 
   if(!category){
     return(
-      <div className="gallary-page-error">
+      <div className="gallery-page-error">
         <p>Category not found</p>
         <button onClick={() => navigate("/")}>Go Back</button>
       </div>
