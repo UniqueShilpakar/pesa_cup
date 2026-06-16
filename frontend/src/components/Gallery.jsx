@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "../css/Gallery.css";
 
-import photo1 from "../assets/Gallary/1.jpg";
-import photo4 from "../assets/Gallary/4.jpg";
-import photoTeam from "../assets/Gallary/team.jpg";
+import photo1 from "../assets/Gallery/1.jpg";
+import photo4 from "../assets/Gallery/4.jpg";
+import photoTeam from "../assets/Gallery/team.jpg";
 
 const categories = [
   {
@@ -30,7 +30,19 @@ const categories = [
 ];
 
 export default function Gallery() {
+  const { categoryId } = useParams();
   const navigate = useNavigate();
+
+  const category = categories.find((c) => c.id === categoryId);
+
+  if (categoryId && !category) {
+    return (
+      <div className="gallery-page-error">
+        <p>Category not found</p>
+        <button onClick={() => navigate("/")}>Go Back</button>
+      </div>
+    );
+  }
 
   return (
     <div className="gallery-landing">
