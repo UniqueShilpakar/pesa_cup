@@ -1,8 +1,13 @@
 {
   "name": "backend",
-  "module": "index.ts",
+  "module": "src/server.ts",
   "type": "module",
   "private": true,
+  "scripts": {
+    "dev": "bun run --watch src/server.ts",
+    "start": "bun run src/server.ts",
+    "build": "bun build ./src/server.ts --outdir ./dist"
+  },
   "devDependencies": {
     "@types/bun": "latest",
     "@types/express": "^5.0.6"
