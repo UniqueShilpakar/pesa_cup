@@ -3,6 +3,7 @@ import { initializeSchema } from "./db/schema";
 import { seedFixtures, seedScorers } from "./db/seed";
 import dbSession from "./config/database";
 
+
 const PORT = process.env.PORT || 3000;
 
 async function startServer() {
