@@ -1,6 +1,6 @@
 import app from "./app";
 import { initializeSchema } from "./db/schema";
-import { seedFixtures, seedScorers } from "./db/seed";
+import { seedAll } from "./db/seed";
 import dbSession from "./config/database";
 
 
@@ -14,8 +14,7 @@ async function startServer() {
 
     // Seed data
     console.log("Seeding database...");
-    await seedFixtures();
-    await seedScorers();
+    await seedAll();
 
     // Start server
     app.listen(PORT, () => {
