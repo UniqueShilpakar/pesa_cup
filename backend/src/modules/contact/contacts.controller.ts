@@ -16,6 +16,15 @@ export class ContactsController {
             res.status(500).json({error: "Internal Server Error"});
         }
     }
+    async getAllContacts(req: Request, res: Response) {
+        try {
+            const contacts = await contactService.getAllContacts();
+            res.status(200).json(contacts);
+        } catch (error) {
+            req.log.error("Error fetching contact messages: " + error);
+            res.status(500).json({error: "Internal Server Error"});
+        }
+    }
 }
 
 const contactController = new ContactsController();
