@@ -1,4 +1,12 @@
-export const standingsData = {
+export let standingsData = {}
+
+if (process.env.NODE_ENV === "development") {
+  standingsData = mockStandingsData;
+}else{
+  // In production, you would fetch this data from an API or database
+}
+
+const mockStandingsData = {
   groupA: [
     { position: 1, team: "2065 Batch", played: 0, won: 0, draw: 0, lost: 0, goalFor: 0, goalAgainst: 0, goalDifference: 0, points: 0 },
     { position: 2, team: "2066 Batch", played: 0, won: 0, draw: 0, lost: 0, goalFor: 0, goalAgainst: 0, goalDifference: 0, points: 0 },
