@@ -1,6 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
 import "../css/Gallery.css";
-
 import photo1 from "../assets/Gallery/1.jpg";
 import photo4 from "../assets/Gallery/4.jpg";
 import photoTeam from "../assets/Gallery/team.jpg";
