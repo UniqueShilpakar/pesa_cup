@@ -1,8 +1,31 @@
 
-import { fixturesData } from '../data/fixtures';
+import { useState, useEffect } from 'react';
+import { FixturesAPI } from '../data/apis/api.fixtures';
 import '../css/Fixtures.css';
 
 export default function Fixtures() {
+  const [fixturesData, setFixturesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchFixtures = async () => {
+      try {
+        setLoading(true);
+        const data = await FixturesAPI.getAllFixtures();
+        setFixturesData(data);
+        setError(null);
+      } catch (err) {
+        setError('Failed to load fixtures. Please try again later.');
+        console.error('Error loading fixtures:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFixtures();
+  }, []);
+
   const upcomingMatches = fixturesData.filter(m => m.status === 'upcoming');
   const finishedMatches = fixturesData.filter(m => m.status === 'finished');
 
@@ -10,22 +33,22 @@ export default function Fixtures() {
     <div className={`match-card ${match.status}`}>
       <div className="match-header">
         <span className="match-date">
-          {new Date(match.date).toLocaleDateString('en-US', { 
-            month: 'short', 
-            day: 'numeric' 
+          {new Date(match.date).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric'
           })}
         </span>
         <span className={`match-status ${match.status}`}>
           {match.status === 'upcoming' ? 'UPCOMING' : 'FINISHED'}
         </span>
       </div>
-      
+
       <div className="match-body">
         <div className="match-info">
           <div className="team-a">
             <div className="team-name">{match.teamA}</div>
           </div>
-          
+
           <div className="match-score">
             {match.status === 'finished' ? (
               <>
@@ -37,13 +60,13 @@ export default function Fixtures() {
               <div className="vs-upcoming">VS</div>
             )}
           </div>
-          
+
           <div className="team-b">
             <div className="team-name">{match.teamB}</div>
           </div>
         </div>
       </div>
-      
+
       <div className="match-footer">
         <span className="match-time">{match.time}</span>
         <span className="match-venue">{match.venue}</span>
@@ -51,14 +74,36 @@ export default function Fixtures() {
     </div>
   );
 
+  if (loading) {
+    return (
+      <section className="fixtures" id="features">
+        <div className="container">
+          <h2 className="section-title">Fixtures</h2>
+          <p className="fixtures-subtitle">Loading fixtures...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="fixtures" id="features">
+        <div className="container">
+          <h2 className="section-title">Fixtures</h2>
+          <p className="fixtures-subtitle" style={{ color: 'red' }}>{error}</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="fixtures" id="features">
       <div className="container">
         <h2 className="section-title">Fixtures</h2>
         <p className="fixtures-subtitle">Upcoming match cards and finished games.</p>
-        
+
         <div className="fixtures-container">
-            
+
          {/* //upcoming matches
          //------------------------------------------------------- */}
           <div className="fixtures-column">

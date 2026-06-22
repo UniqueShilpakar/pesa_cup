@@ -4,20 +4,26 @@ import dbSession from "../../config/database.ts";
 //Tournament Repository
 const tournamentRepository ={
   getTotalTeams: async (): Promise<number> => {
-    const result = await dbSession.query<{ total: number }>("SELECT COUNT(*) AS total FROM teams");
+    // Count unique teams from standings table
+    const result = await dbSession.query<{ total: number }>("SELECT COUNT(*) AS total FROM standings");
     return result[0]?.total ?? 0;
   },
   getTotalMatches: async (): Promise<number> => {
-    const result = await dbSession.query<{ total: number }>("SELECT COUNT(*) AS total FROM matches");
+    // Count matches from fixtures table
+    const result = await dbSession.query<{ total: number }>("SELECT COUNT(*) AS total FROM fixtures");
     return result[0]?.total ?? 0;
   },
   getTotalGoals: async (): Promise<number> => {
-    const result = await dbSession.query<{ total: number }>("SELECT SUM(goals) AS total FROM matches");
+    // Sum goals from finished fixtures
+    const result = await dbSession.query<{ total: number }>(
+      "SELECT (COALESCE(SUM(scoreA), 0) + COALESCE(SUM(scoreB), 0)) AS total FROM fixtures WHERE status = 'finished'"
+    );
     return result[0]?.total ?? 0;
   },
   getTopScorer: async (): Promise<{ name: string; goals: number } | null> => {
+    // Get top scorer from scorers table
     const result = await dbSession.query<{ name: string; goals: number }>(
-      "SELECT players.name, SUM(goals) AS goals FROM players JOIN matches ON players.id = matches.scorer_id GROUP BY players.id ORDER BY goals DESC LIMIT 1"
+      "SELECT name, goals FROM scorers ORDER BY goals DESC LIMIT 1"
     );
     return result[0] ?? null;
   },

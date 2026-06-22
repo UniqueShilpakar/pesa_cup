@@ -1,0 +1,12 @@
+[workspace]
+authors = ["Krish-Om <krishombasukala@gmail.com>"]
+channels = ["conda-forge"]
+name = "pesa_cup"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+dev-backend = {cmd = "bun run dev",cwd = "backend"}
+dev-frontend = {cmd = "bun run dev",cwd="frontend"}
+dev = "pixi run dev-backend & pixi run dev-frontend && wait"
+[dependencies]
