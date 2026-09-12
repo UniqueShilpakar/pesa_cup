@@ -1,43 +1,53 @@
-.fixtures{
-    padding: 4rem 0;
-    background-color: var(--primary-darker);
-    position: relative;
-    overflow: hidden;
+.fixtures {
+  padding: 4rem 0;
+  background-color: var(--primary-darker);
+  position: relative;
+  overflow: hidden;
 }
 
-.fixtures::before{
-    content: '';
-    position: absolute;
-    top: 0;
-    right: -50%;
-    width: 200%;
-    height: 100%;
-    background: radial-gradient(circle at 80% 50%, rgba(212, 175, 55, 0.05) 0%, transparent 50%);
+.fixtures::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -50%;
+  width: 200%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 80% 50%,
+    rgba(212, 175, 55, 0.05) 0%,
+    transparent 50%
+  );
   pointer-events: none;
 }
 
-.fixtures-subtitle{
-    text-align: center;
-    color: var(--text-light);
-    font-size: 1.05rem;
-    margin-bottom: 3rem;
-    position: relative;
-    z-index: 1;
+/* Constrain and center layout content across high-res monitors */
+.fixtures .container {
+  max-width: 1280px;
+  width: 90%;
+  margin: 0 auto;
 }
-.fixtures-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+
+.fixtures-subtitle {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 1.05rem;
+  margin-bottom: 3rem;
   position: relative;
   z-index: 1;
 }
 
-.fixtures-column {
-  animation: fadeInUp 0.6s ease forwards;
+/* Enforce a 3-column layout on desktop to span full width */
+.fixtures-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+  align-items: start;
 }
 
-.fixtures-column:nth-child(2) {
-  animation-delay: 0.2s;
+.fixtures-column {
+  width: 100%;
 }
 
 .column-title {
@@ -60,6 +70,13 @@
   font-weight: 600;
 }
 
+/* Badges styling */
+.live-title .title-badge.live {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+
 .upcoming-title .title-badge {
   background-color: rgba(212, 175, 55, 0.2);
   color: var(--accent-gold);
@@ -78,14 +95,21 @@
   gap: 1.5rem;
 }
 
+/* Match card layout and smooth load transitions */
 .match-card {
-  background: linear-gradient(135deg, rgba(0, 61, 122, 0.6) 0%, rgba(0, 31, 63, 0.6) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 61, 122, 0.6) 0%,
+    rgba(0, 31, 63, 0.6) 100%
+  );
   border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.6s ease forwards;
-  opacity: 0;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  animation: fadeIn 0.4s ease forwards;
 }
 
 .match-card:hover {
@@ -118,6 +142,11 @@
   letter-spacing: 0.5px;
 }
 
+.match-status.live {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
 .match-status.upcoming {
   background-color: rgba(212, 175, 55, 0.2);
   color: var(--accent-gold);
@@ -139,7 +168,8 @@
   align-items: center;
 }
 
-.team-a, .team-b {
+.team-a,
+.team-b {
   text-align: center;
 }
 
@@ -157,6 +187,7 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0 0.5rem;
+  min-height: 44px;
 }
 
 .score {
@@ -165,6 +196,7 @@
   color: var(--accent-gold);
   min-width: 40px;
   text-align: center;
+  line-height: 1;
 }
 
 .vs {
@@ -176,6 +208,9 @@
 }
 
 .vs-upcoming {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.75rem;
   color: var(--text-light);
   font-weight: 700;
@@ -184,6 +219,8 @@
   background-color: rgba(212, 175, 55, 0.1);
   border-radius: 4px;
   width: 50px;
+  height: 32px;
+  box-sizing: border-box;
 }
 
 .match-footer {
@@ -214,24 +251,27 @@
   font-style: italic;
 }
 
-/* Responsive Design */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Breakpoints */
 @media (max-width: 1024px) {
   .fixtures-container {
-    grid-template-columns: 1fr;
-  }
-
-  .fixtures-column {
-    animation: none;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .fixtures {
     padding: 2.5rem 0;
-  }
-
-  .match-card {
-    animation: none;
   }
 
   .match-info {
@@ -292,5 +332,3 @@
     font-size: 0.75rem;
   }
 }
-
-

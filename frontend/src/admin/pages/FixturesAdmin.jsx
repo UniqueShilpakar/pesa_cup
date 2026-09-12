@@ -58,13 +58,16 @@ export default function FixturesAdmin() {
     setLoading(true);
     setError("");
     try {
-      const [fixturesData, registrationsData, tournamentsData] = await Promise.all([
-        FixturesAdminAPI.getAll(),
-        RegistrationsAdminAPI.getAll(),
-        TournamentsAdminAPI.getAll(),
-      ]);
+      const [fixturesData, registrationsData, tournamentsData] =
+        await Promise.all([
+          FixturesAdminAPI.getAll(),
+          RegistrationsAdminAPI.getAll(),
+          TournamentsAdminAPI.getAll(),
+        ]);
 
-      setFixtures(Array.isArray(fixturesData) ? fixturesData : (fixturesData?.data ?? []));
+      setFixtures(
+        Array.isArray(fixturesData) ? fixturesData : (fixturesData?.data ?? []),
+      );
 
       const registrations = Array.isArray(registrationsData)
         ? registrationsData
@@ -72,7 +75,9 @@ export default function FixturesAdmin() {
       setTeams(deriveTeams(registrations));
 
       setTournaments(
-        Array.isArray(tournamentsData) ? tournamentsData : (tournamentsData?.data ?? []),
+        Array.isArray(tournamentsData)
+          ? tournamentsData
+          : (tournamentsData?.data ?? []),
       );
     } catch (err) {
       if (err instanceof AdminAuthError) {
