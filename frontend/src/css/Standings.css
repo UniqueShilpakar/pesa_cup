@@ -6,24 +6,79 @@
 }
 
 .standings-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -50%;
   width: 200%;
   height: 100%;
-  background: radial-gradient(circle at 20% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%);
+  background: radial-gradient(
+    circle at 20% 50%,
+    rgba(212, 175, 55, 0.03) 0%,
+    transparent 50%
+  );
   pointer-events: none;
 }
 
+/* Filter Section & Tournament Dropdown Styles */
+.standings-filters {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-group label {
+  color: var(--text-light);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filter-select {
+  background-color: rgba(0, 31, 63, 0.8);
+  color: var(--accent-gold);
+  border: 2px solid var(--border-color);
+  padding: 0.65rem 1.25rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.filter-select option {
+  background-color: var(--primary-dark);
+  color: var(--text-light);
+}
+
+/* Group Tabs */
 .group-tabs {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 0;
   flex-wrap: wrap;
   position: relative;
   z-index: 2;
   justify-content: center;
+  max-width: 100%;
 }
 
 .group-tab {
@@ -53,7 +108,11 @@
 }
 
 .standings-container {
-  background: linear-gradient(135deg, rgba(0, 61, 122, 0.5) 0%, rgba(0, 31, 63, 0.5) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 61, 122, 0.5) 0%,
+    rgba(0, 31, 63, 0.5) 100%
+  );
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 2rem;
@@ -144,17 +203,17 @@
 }
 
 .position-badge {
-  display: inline-block;
+  display: flex;
   width: 32px;
   height: 32px;
   background: linear-gradient(135deg, var(--accent-gold), var(--accent-light));
   color: var(--primary-dark);
   border-radius: 50%;
-  display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: 0.9rem;
+  margin: 0 auto;
 }
 
 .standings-table tbody tr.rank-1 .position-badge {
@@ -205,8 +264,14 @@
     padding: 2.5rem 0;
   }
 
-  .group-tabs {
+  .standings-filters {
     margin-bottom: 1.5rem;
+    gap: 1rem;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    gap: 0.4rem;
   }
 
   .group-tab {

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { StandingsAPI } from "../data/apis/api.standings";
 import "../css/Standings.css";
+import { StandingsAPI } from "../data/apis/api.standings";
 
 const StandingsTable = ({ data }) => (
   <div className="table-wrapper">
@@ -19,16 +19,12 @@ const StandingsTable = ({ data }) => (
           <th className="col-pts">Pts</th>
         </tr>
       </thead>
-
       <tbody>
         {data.map((team) => (
-          <tr key={team.id ?? team.position ?? team.team}>
+          <tr key={team.id ?? `${team.team}-${team.position}`}>
             <td className="col-pos">
-              <div className="position-badge">
-                {team.position}
-              </div>
+              <div className="position-badge">{team.position}</div>
             </td>
-
             <td className="col-team">{team.team}</td>
             <td className="col-stat">{team.played}</td>
             <td className="col-stat">{team.won}</td>
@@ -36,24 +32,20 @@ const StandingsTable = ({ data }) => (
             <td className="col-stat">{team.lost}</td>
             <td className="col-stat">{team.goalFor}</td>
             <td className="col-stat">{team.goalAgainst}</td>
-
             <td
               className={`col-stat ${
                 team.goalDifference > 0
                   ? "positive"
                   : team.goalDifference < 0
-                  ? "negative"
-                  : ""
+                    ? "negative"
+                    : ""
               }`}
             >
               {team.goalDifference > 0 ? "+" : ""}
               {team.goalDifference}
             </td>
-
             <td className="col-pts">
-              <span className="points-badge">
-                {team.points}
-              </span>
+              <span className="points-badge">{team.points}</span>
             </td>
           </tr>
         ))}
@@ -62,9 +54,10 @@ const StandingsTable = ({ data }) => (
   </div>
 );
 
-export default function StandingsSection() {
+export default function Standings() {
   const [standings, setStandings] = useState([]);
-  const [activeGroup, setActiveGroup] = useState("");
+  const [selectedTournament, setSelectedTournament] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -99,67 +92,103 @@ export default function StandingsSection() {
     };
   }, []);
 
-  const groups = useMemo(() => {
-    const groupedStandings = standings.reduce((accumulator, standing) => {
-      const groupId = standing.group || "groupA";
-      if (!accumulator[groupId]) {
-        accumulator[groupId] = [];
+  // Extract unique tournaments
+  const tournaments = useMemo(() => {
+    const tourneyMap = new Map();
+    standings.forEach((item) => {
+      if (item.tournament) {
+        tourneyMap.set(item.tournament.id, item.tournament.name);
       }
-      accumulator[groupId].push(standing);
-      return accumulator;
-    }, {});
-
-    return Object.entries(groupedStandings)
-      .map(([id, data]) => ({
-        id,
-        label: id.replace(/([a-z])([A-Z])/g, "$1 $2").toUpperCase(),
-        data: [...data].sort((a, b) => (a.position ?? 0) - (b.position ?? 0)),
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+    });
+    return Array.from(tourneyMap.entries()).map(([id, name]) => ({ id, name }));
   }, [standings]);
 
+  // Set default selected tournament
   useEffect(() => {
-    if (groups.length > 0 && !groups.some((group) => group.id === activeGroup)) {
-      setActiveGroup(groups[0].id);
+    if (
+      tournaments.length > 0 &&
+      !tournaments.some((t) => t.id === Number(selectedTournament))
+    ) {
+      setSelectedTournament(tournaments[0].id);
     }
-  }, [groups, activeGroup]);
+  }, [tournaments, selectedTournament]);
 
-  const currentGroup =
-    groups.find((g) => g.id === activeGroup) || groups[0];
+  // Filter standings for selected tournament
+  const currentTournamentStandings = useMemo(() => {
+    return standings.filter(
+      (item) => item.tournamentId === Number(selectedTournament),
+    );
+  }, [standings, selectedTournament]);
+
+  // Extract unique groups for the selected tournament
+  const groups = useMemo(() => {
+    const groupSet = new Set(
+      currentTournamentStandings.map((item) => item.group || "Group A"),
+    );
+    return Array.from(groupSet);
+  }, [currentTournamentStandings]);
+
+  // Set default selected group
+  useEffect(() => {
+    if (groups.length > 0 && !groups.includes(selectedGroup)) {
+      setSelectedGroup(groups[0]);
+    }
+  }, [groups, selectedGroup]);
+
+  // Final table data sorted by position
+  const filteredData = useMemo(() => {
+    return currentTournamentStandings
+      .filter((item) => (item.group || "Group A") === selectedGroup)
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+  }, [currentTournamentStandings, selectedGroup]);
 
   return (
     <section className="standings" id="standings">
       <div className="container">
         <h2 className="section-title">Standings</h2>
 
-        {loading ? <p>Loading standings from the backend...</p> : null}
-        {!loading && error ? <p>{error}</p> : null}
+        {loading && <p>Loading standings from the backend...</p>}
+        {!loading && error && <p>{error}</p>}
 
-        {!loading && groups.length > 0 ? (
-          <div className="group-tabs">
-            {groups.map((group) => (
-              <button
-                key={group.id}
-                className={`group-tab ${
-                  activeGroup === group.id ? "active" : ""
-                }`}
-                onClick={() => setActiveGroup(group.id)}
+        {!loading && tournaments.length > 0 && (
+          <div className="standings-filters">
+            {/* Tournament Selector */}
+            <div className="filter-group">
+              <label htmlFor="tournament-select">Tournament:</label>
+              <select
+                id="tournament-select"
+                className="filter-select"
+                value={selectedTournament}
+                onChange={(e) => setSelectedTournament(e.target.value)}
               >
-                {group.label}
-              </button>
-            ))}
+                {tournaments.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Group Filter Tabs */}
+            {groups.length > 0 && (
+              <div className="group-tabs">
+                {groups.map((group) => (
+                  <button
+                    key={group}
+                    className={`group-tab ${selectedGroup === group ? "active" : ""}`}
+                    onClick={() => setSelectedGroup(group)}
+                  >
+                    {group}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        ) : null}
+        )}
 
         <div className="standings-container">
-          {!loading && currentGroup ? (
-            <>
-              <h3 className="group-title">
-                {currentGroup.label}
-              </h3>
-
-              <StandingsTable data={currentGroup.data} />
-            </>
+          {!loading && filteredData.length > 0 ? (
+            <StandingsTable data={filteredData} />
           ) : !loading ? (
             <p>No standings available.</p>
           ) : null}
